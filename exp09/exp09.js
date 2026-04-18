@@ -1,1 +1,85 @@
+// Create an application for like student records using AngularJS.
 
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Student Records Application</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        table { border-collapse: collapse; width: 100%; margin-bottom: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+        th { background-color: #f2f2f2; }
+        .form-group { margin-bottom: 10px; }
+        button { padding: 5px 10px; cursor: pointer; }
+    </style>
+</head>
+<body ng-app="studentApp" ng-controller="studentCtrl">
+
+    <h2>A. C. Patil College of Engineering - Student Directory</h2>
+
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Course</th>
+            <th>Action</th>
+        </tr>
+        <tr ng-repeat="student in students">
+            <td>{{ student.name }}</td>
+            <td>{{ student.course }}</td>
+            <td>
+                <button ng-click="deleteStudent($index)">Delete</button>
+            </td>
+        </tr>
+    </table>
+
+    <h3>Add New Student</h3>
+    <div class="form-group">
+        <label>Name: </label>
+        <input type="text" ng-model="newStudentName" placeholder="Enter name">
+    </div>
+    <div class="form-group">
+        <label>Course: </label>
+        <input type="text" ng-model="newStudentCourse" placeholder="Enter course">
+    </div>
+    <button ng-click="addStudent()">Add Record</button>
+
+    <script>
+        // Define the Angular Module
+        var app = angular.module('studentApp', []);
+
+        // Define the Controller
+        app.controller('studentCtrl', function($scope) {
+            
+            // 1. Initial Database (Array of Objects)
+            $scope.students = [
+                { name: 'Swarup Ingale', course: 'Web-X' },
+                { name: 'Tanmay Rathod', course: 'Cybersecurity' }
+            ];
+
+            // 2. Function to Add a Student
+            $scope.addStudent = function() {
+                // Ensure fields are not empty
+                if ($scope.newStudentName && $scope.newStudentCourse) {
+                    // Push a new object into the array
+                    $scope.students.push({
+                        name: $scope.newStudentName,
+                        course: $scope.newStudentCourse
+                    });
+                    
+                    // Clear the input fields after adding
+                    $scope.newStudentName = '';
+                    $scope.newStudentCourse = '';
+                }
+            };
+
+            // 3. Function to Delete a Student
+            $scope.deleteStudent = function(index) {
+                // Remove 1 item at the specified index
+                $scope.students.splice(index, 1);
+            };
+        });
+    </script>
+</body>
+</html>
