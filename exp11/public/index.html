@@ -1,0 +1,60 @@
+<!--The Frontend (AngularJS)-->
+
+<!DOCTYPE html>
+<html ng-app="meanApp">
+<head>
+    <title>MEAN Stack Practical</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
+    <style> body { font-family: Arial; padding: 20px; } </style>
+</head>
+<body ng-controller="MainCtrl">
+
+    <h2>Full-Stack Student Registration</h2>
+    
+    <input type="text" ng-model="newName" placeholder="Student Name">
+    <input type="text" ng-model="newCourse" placeholder="Course">
+    <button ng-click="addStudent()">Register</button>
+
+    <hr>
+
+    <h3>Registered Database Records:</h3>
+    <ul>
+        <li ng-repeat="student in students">
+            {{ student.name }} - {{ student.course }}
+        </li>
+    </ul>
+
+    <script>
+        var app = angular.module('meanApp', []);
+
+        // We inject $scope (for UI) and $http (for remote communication)
+        app.controller('MainCtrl', function($scope, $http) {
+            
+            // 1. READ: Fetch data from our Node/TypeScript API
+            $http.get('/api/students').then(function(response) {
+                // Attach the database results to the view
+                $scope.students = response.data;
+            });
+
+            // 2. CREATE: Send data to our API
+            $scope.addStudent = function() {
+                var payload = {
+                    name: $scope.newName,
+                    course: $scope.newCourse
+                };
+
+                // Post the payload to the server
+                $http.post('/api/students', payload).then(function(response) {
+                    // Instantly update the UI with the saved database record
+                    $scope.students.push(response.data);
+                    
+                    // Clear the form
+                    $scope.newName = '';
+                    $scope.newCourse = '';
+                });
+            };
+        });
+    </script>
+
+</body>
+</html>
